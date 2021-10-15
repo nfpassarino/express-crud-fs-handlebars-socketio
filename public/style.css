@@ -1,0 +1,14 @@
+body {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+}
+
+.firstContainer {
+    background-color: #eeeeee;
+    border-radius: .5rem;
+}
+
+.imgTable {
+    height: 3rem;
+}
