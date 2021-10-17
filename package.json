@@ -2,10 +2,10 @@
   "name": "express-challenge",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon --watch server.js"
+    "start": "node src/app.js",
+    "dev": "nodemon --watch src/app.js"
   },
   "repository": {
     "type": "git",
@@ -20,9 +20,10 @@
   "homepage": "https://github.com/nfpassarino/express-challenge#readme",
   "dependencies": {
     "bootstrap-icons": "^1.5.0",
-    "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.4",
+    "handlebars": "^4.7.7",
+    "moment": "^2.29.1",
     "nodemon": "^2.0.13",
     "socket.io": "^4.2.0"
   }

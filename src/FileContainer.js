@@ -1,8 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const moment = require('moment');
 const fsPromises = fs.promises;
 
-module.exports = class Container {
+module.exports = class FileContainer {
 
     constructor(filePath, objects, lastId) {
         this.filePath = filePath;
@@ -16,16 +17,17 @@ module.exports = class Container {
             const data = await fsPromises.readFile(filePath, 'utf-8');
             const objects = JSON.parse(data).objects;
             const lastId = objects.slice(-1)[0]?.id || 0;
-            return new Container(filePath, objects, lastId);
+            return new FileContainer(filePath, objects, lastId);
         } else {
             await fsPromises.writeFile(filePath, JSON.stringify({ objects: [] }, null, 2));
-            return new Container(filePath, [], 0);
+            return new FileContainer(filePath, [], 0);
         }
     }
 
     async save(obj) {
         if(typeof obj === 'object') {
             obj['id'] = ++this.lastId;
+            obj['timestamp'] = moment().format('D/M/YY H:m');
             this.objects.push(obj);
             await fsPromises.writeFile(this.filePath, JSON.stringify({ objects: this.objects }, null, 2));
             return obj.id;

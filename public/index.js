@@ -1,30 +1,21 @@
+import { initializeUI, renderProductList, renderChat } from './ui.js';
+
 const socket = io();
+const getProductList = () => socket.emit('client:productList');
+const getMessages = () => socket.emit('client:messages');
 
-let script = document.querySelector("#template").innerHTML;
+initializeUI();
 
-let productContainer = document.querySelector("#productContainer");
+socket.emit('client:productList');
+socket.emit('client:messages');
+socket.on('server:changeProductList', getProductList);
+socket.on('server:newMessage', getMessages);
 
-socket.on('server:loadproducts', data => {
-    let products = JSON.parse(data);
-    console.log(products);
-    let template = Handlebars.compile(script);
-    let html = template(products);
-    console.log('html ' + html);
-    productContainer.innerHTML = html;
+socket.on('server:productList', data => {
+    renderProductList(data);
 });
 
-const sendNewProduct = () => {
-    console.log('enviaaaaandooooo')
-    const title = document.getElementById("inputTitle").value;
-    const price = document.getElementById("inputPrice").value;
-    const thumbnail = document.getElementById("inputThumbnail").value;
-    const successAlert = document.getElementById("successAlert");
-    const productName = document.getElementById("productName");
-    socket.emit('client:newproduct', JSON.stringify({
-        "title": title,
-        "price": Number(price),
-        "thumbnail": thumbnail
-    }));
-    productName.innerText = title;
-    successAlert.classList.add('show');
-};
+socket.on('server:messages', data => {
+    renderChat(data);
+});
+

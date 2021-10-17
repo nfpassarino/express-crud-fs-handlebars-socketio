@@ -1,9 +1,9 @@
 const express = require('express');
-const productAPI = express.Router();
-const fileHelper = require('./../helpers/fileHelper');
+const productRoutes = express.Router();
+const productController = require('../product/productController');
 
-productAPI.get('/', (req, res) => {
-    fileHelper.fetchAllProducts()
+productRoutes.get('/', (req, res) => {
+    productController.fetchAllProducts()
         .then(data => res.json({
             message: 'Lista de productos',
             data: data
@@ -11,8 +11,8 @@ productAPI.get('/', (req, res) => {
         .catch(e => console.error(e));
 });
 
-productAPI.get('/random', (req, res) => {
-    fileHelper.fetchRandomProduct()
+productRoutes.get('/random', (req, res) => {
+    productController.fetchRandomProduct()
         .then(random => res.json({
             message: 'Producto aleatorio',
             data: random
@@ -20,9 +20,9 @@ productAPI.get('/random', (req, res) => {
         .catch(e => console.error(e));
 });
 
-productAPI.get('/:id', (req, res) => {
+productRoutes.get('/:id', (req, res) => {
     const { id } = req.params;
-    fileHelper.fetchProductById(id)
+    productController.fetchProductById(id)
         .then(result => {
             result === null
                 ? res.json({
@@ -36,11 +36,11 @@ productAPI.get('/:id', (req, res) => {
         .catch(e => console.error(e));
 });
 
-productAPI.post('/', (req, res) => {
+productRoutes.post('/', (req, res) => {
     const newProduct = req.body;
-    fileHelper.writeNewProduct(newProduct)
+    productController.writeNewProduct(newProduct)
         .then(id => {
-            fileHelper.fetchProductById(id)
+            productController.fetchProductById(id)
                 .then(pro => res.json({
                     message: 'Producto guardado',
                     data: pro
@@ -49,12 +49,12 @@ productAPI.post('/', (req, res) => {
         .catch(e => console.error(e));
 });
 
-productAPI.put('/:id', (req, res) => {
+productRoutes.put('/:id', (req, res) => {
     const { id } = req.params;
     const newProduct = req.body;
-    fileHelper.updateProduct(id, newProduct)
+    productController.updateProduct(id, newProduct)
         .then(id => {
-            fileHelper.fetchProductById(id)
+            productController.fetchProductById(id)
                 .then(pro => res.json({
                     message: 'Producto actualizado',
                     data: pro
@@ -63,9 +63,9 @@ productAPI.put('/:id', (req, res) => {
         .catch(e => console.error(e));
 });
 
-productAPI.delete('/:id', (req, res) => {
+productRoutes.delete('/:id', (req, res) => {
     const { id } = req.params;
-    fileHelper.deleteProduct(id)
+    productController.deleteProduct(id)
         .then(all => res.json({
             message: 'Producto eliminado',
             data: all
@@ -73,4 +73,4 @@ productAPI.delete('/:id', (req, res) => {
         .catch(e => console.error(e));
 });
 
-module.exports = productAPI;
+module.exports = productRoutes;
